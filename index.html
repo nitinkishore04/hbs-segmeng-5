@@ -1,0 +1,167 @@
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Segment 6</title>
+<meta name="theme-color" content="DodgerBlue">
+<meta name="viewport" content="width=device-width, initial-scale=0.1">
+<script type="text/JavaScript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js?ver=1.4.2"></script>
+<style>
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body, html {
+	overflow: auto;
+	background: #86ABF9;
+	height: 100%;
+}
+
+body {
+display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+
+#myCanvas {
+    cursor: crosshair;
+    position: fixed;
+    background: blue;
+}
+	
+</style>
+</head>
+<body>
+
+<canvas id="myCanvas">
+	Sorry, your browser does not support HTML5 canvas technology.
+</canvas>
+
+<script>
+
+window.onload = function() {
+	draw();
+	consoleHints();
+};
+
+const consoleHints = () => {
+	console.log(`
+	Segment-6
+	\n
+	- Portugal => Ireland => Italy => Denmark\n
+	- Argentina=> Bolivia => Venezuela => Bolivia => Brazil => Bolivia => Paraguay\n
+	- South Africa => Angola => Libya => Saudi Arabia => Angola => Madagascar\n
+	- Kyrgyzstan => India => Myanmar\n
+	- Mongolia => China.\n
+	- Finland => Sweden => Poland => Belarus=> Poland => Greece => Ukraine.\n
+	\n
+	To Proceed : bit.ly/hu19-q7-{passcode}
+`)
+}
+
+function draw(){
+	var myCanvas = document.getElementById("myCanvas");
+	var ctx = myCanvas.getContext("2d");
+
+	var background = new Image();
+	background.src = "./map.jpg";
+
+	background.onload = function(){
+		ctx.drawImage(background,0,0);
+	}
+
+    myCanvas.width = 1920;
+	myCanvas.height = 1080;
+	
+
+    ctx.fillStyle="#fff";
+    ctx.fillRect(0, 0, myCanvas.width, myCanvas.height);
+	
+
+	if(myCanvas){
+	    
+		var isDown = false;
+		var canvasX, canvasY;
+		ctx.lineWidth = 5;
+		
+		$(myCanvas)
+		.mousedown(function(e){
+		    $("#name").fadeOut("slow");
+			isDown = true;
+			ctx.fillStyle='black';
+            
+			ctx.beginPath();
+			canvasX = e.pageX - myCanvas.offsetLeft;
+			canvasY = e.pageY - myCanvas.offsetTop;
+			ctx.fillRect(canvasX, canvasY, 4, 4);
+			ctx.moveTo(canvasX1, canvasY);
+            
+		})
+		.mousemove(function(e){
+			if(isDown !== false) {
+				canvasX = e.pageX - myCanvas.offsetLeft;
+				canvasY = e.pageY - myCanvas.offsetTop;
+				ctx.lineTo(canvasX, canvasY);
+				ctx.strokeStyle = "#FF0000";
+				ctx.stroke();
+			}
+		})
+		.mouseup(function(e){
+		    
+			isDown = false;
+			
+			ctx.closePath();
+		});
+	}
+	
+
+	draw = {
+		started: false,
+		start: function(evt) {
+		    ctx.fillStyle='black';
+            ctx.fillRect(evt.touches[0].pageX, evt.touches[0].pageY, 3, 3);
+			ctx.beginPath();
+			ctx.moveTo(
+				evt.touches[0].pageX,
+				evt.touches[0].pageY
+			);
+
+			this.started = true;
+
+		},
+		move: function(evt) {
+
+			if (this.started) {
+			    $("#name").fadeOut("slow");
+				ctx.lineTo(
+					evt.touches[0].pageX,
+					evt.touches[0].pageY
+				);
+
+				ctx.strokeStyle = "#000";
+				ctx.lineWidth = 5;
+				ctx.stroke();
+			}
+
+		},
+		end: function(evt) {
+			this.started = false;
+		}
+	};
+	
+
+	myCanvas.addEventListener('touchstart', draw.start, false);
+	myCanvas.addEventListener('touchend', draw.end, false);
+	myCanvas.addEventListener('touchmove', draw.move, false);
+	
+
+	document.body.addEventListener('touchmove',function(evt){
+		evt.preventDefault();
+	}, false);
+}
+</script>
+</body>
+</html>
+
